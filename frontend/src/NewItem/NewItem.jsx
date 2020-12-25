@@ -3,6 +3,8 @@ import { PageContainer } from '../Common/PageContainer';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { NewHabit } from './NewHabit';
+import { NewGoal } from './NewGoal';
+import { NewTask } from './NewTask';
 
 const useStyles = makeStyles({
   buttonGroup: {
@@ -41,8 +43,8 @@ export const NewItem = () => {
           New Habit
         </ToggleButton>
       </ToggleButtonGroup>
-      {itemType === 'newTask' && <div>New Task</div>}
-      {itemType === 'newGoal' && <div>New Goal</div>}
+      {itemType === 'newTask' && <NewTask />}
+      {itemType === 'newGoal' && <NewGoal />}
       {itemType === 'newHabit' && <NewHabit />}
     </PageContainer>
   );
