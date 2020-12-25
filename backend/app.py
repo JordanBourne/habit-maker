@@ -12,47 +12,63 @@ USERS_TABLE = os.environ['USERS_TABLE']
 client = boto3.client('dynamodb')
 
 
-@app.route("/")
+@app.route('/')
 def hello():
-    print("Headers")
+    print('Headers')
     print(request.headers)
-    return "Hello World!"
+    return 'Hello World!'
 
-
-@app.route("/users/<string:user_id>")
-def get_user(user_id):
-    resp = client.get_item(
-        TableName=USERS_TABLE,
-        Key={
-            'userId': { 'S': user_id }
-        }
-    )
-    item = resp.get('Item')
-    if not item:
-        return jsonify({'error': 'User does not exist'}), 404
-
+@app.route('/tasks/new-task', methods=['POST'])
+def create_task():
+    task_details = request.json
+    print(task_details)
     return jsonify({
-        'userId': item.get('userId').get('S'),
-        'name': item.get('name').get('S')
+        'success': True
+    })
+
+@app.route('/tasks/new-habit', methods=['POST'])
+def create_habit():
+    habit_details = request.json
+    print(habit_details)
+    return jsonify({
+        'success': True
     })
 
 
-@app.route("/users", methods=["POST"])
-def create_user():
-    user_id = request.json.get('userId')
-    name = request.json.get('name')
-    if not user_id or not name:
-        return jsonify({'error': 'Please provide userId and name'}), 400
+# @app.route('/users/<string:user_id>')
+# def get_user(user_id):
+#     resp = client.get_item(
+#         TableName=USERS_TABLE,
+#         Key={
+#             'userId': { 'S': user_id }
+#         }
+#     )
+#     item = resp.get('Item')
+#     if not item:
+#         return jsonify({'error': 'User does not exist'}), 404
 
-    resp = client.put_item(
-        TableName=USERS_TABLE,
-        Item={
-            'userId': {'S': user_id },
-            'name': {'S': name }
-        }
-    )
+#     return jsonify({
+#         'userId': item.get('userId').get('S'),
+#         'name': item.get('name').get('S')
+#     })
 
-    return jsonify({
-        'userId': user_id,
-        'name': name
-    })
+
+# @app.route('/users', methods=['POST'])
+# def create_user():
+#     user_id = request.json.get('userId')
+#     name = request.json.get('name')
+#     if not user_id or not name:
+#         return jsonify({'error': 'Please provide userId and name'}), 400
+
+#     resp = client.put_item(
+#         TableName=USERS_TABLE,
+#         Item={
+#             'userId': {'S': user_id },
+#             'name': {'S': name }
+#         }
+#     )
+
+#     return jsonify({
+#         'userId': user_id,
+#         'name': name
+#     })

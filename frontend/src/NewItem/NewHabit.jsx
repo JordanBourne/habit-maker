@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   container: {
@@ -88,7 +89,7 @@ export const NewHabit = () => {
     const validWeekly = (validOnDaysWeekly || validDayCount) && frequency === 'weekly';
     const validMonthly = (validOnDaysMonthly || validDayCount) && frequency === 'monthly';
     setFormValid(!!(frequency && name && description && (validDaily || validWeekly || validMonthly)));
-  });
+  }, [frequency, formValid, name, description, scheduleType, numDays, onDaysWeekly, onDaysMonthly]);
 
   const handleSubmit = (e) => {
     const habitDetails = {
@@ -101,8 +102,13 @@ export const NewHabit = () => {
       onDaysMonthly
     };
 
-    // Submit this to API
-    console.log(habitDetails);
+    axios.post('http://localhost:5000/tasks/new-habit', habitDetails)
+      .then(res => {
+        // handle success
+      })
+      .catch(err => {
+        console.log('Error: ', err);
+      })
   };
 
   const updateFrequency = (e, newFrequency) => setFrequency(newFrequency);
@@ -115,9 +121,9 @@ export const NewHabit = () => {
 
   const updateNumDays = (e) => {
     const dayCount = (e.target.value || '').replace(/[^0-9]/g, '');
-    if (frequency == 'weekly' && parseInt(dayCount) > 7) {
+    if (frequency === 'weekly' && parseInt(dayCount) > 7) {
       setNumDays(7)
-    } else if (frequency == 'monthly' && parseInt(dayCount) > 31) {
+    } else if (frequency === 'monthly' && parseInt(dayCount) > 31) {
       setNumDays(31);
     } else {
       setNumDays(dayCount);

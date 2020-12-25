@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   container: {
@@ -42,12 +42,12 @@ export const NewTask = () => {
   const classes = useStyles();
   const [ name, setName ] = useState('');
   const [ description, setDescription ] = useState('');
-  const [ taskDate, setTaskDate ] = useState('2017-05-24');
+  const [ taskDate, setTaskDate ] = useState('');
   const [ formValid, setFormValid ] = useState(false);
   
   useEffect(() => {
     setFormValid(!!(name && description && taskDate));
-  });
+  }, [name, description, taskDate]);
 
   const handleSubmit = (e) => {
     const taskDetails = {
@@ -56,8 +56,12 @@ export const NewTask = () => {
       taskDate
     };
 
-    // Submit this to API
-    console.log(taskDetails);
+    axios.post('http://localhost:5000/tasks/new-task', taskDetails)
+      .then(res => {
+        // handle success
+      })
+      .catch(err => {
+      })
   };
 
   return (
