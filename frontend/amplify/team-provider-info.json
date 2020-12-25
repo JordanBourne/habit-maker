@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-frontend-dev-191834-authRole",
+      "UnauthRoleArn": "arn:aws:iam::886238255012:role/amplify-frontend-dev-191834-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::886238255012:role/amplify-frontend-dev-191834-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-frontend-dev-191834-deployment",
+      "UnauthRoleName": "amplify-frontend-dev-191834-unauthRole",
+      "StackName": "amplify-frontend-dev-191834",
+      "StackId": "arn:aws:cloudformation:us-west-2:886238255012:stack/amplify-frontend-dev-191834/56cb78e0-458e-11eb-b5dd-0a5813a52bd7",
+      "AmplifyAppId": "d23oqvdl3fd40t"
+    },
+    "categories": {
+      "auth": {
+        "frontend9b86fc04": {
+          "userPoolId": "us-west-2_OdmHAEceI",
+          "userPoolName": "habit-maker-users",
+          "webClientId": "350sebeh9dpk0p1dt4bjctg54j",
+          "nativeClientId": "19nmrosa4ojj17c59363gpaqtb"
+        }
+      }
+    }
+  }
+}

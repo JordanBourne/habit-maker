@@ -10,6 +10,7 @@ plugins:
 custom:
   userTableName: 'users-table-${self:provider.stage}'
   taskTableName: 'task-table-${self:provider.stage}'
+  habitTableName: 'habit-table-${self:provider.stage}'
   wsgi:
     app: app.app
     packRequirements: false
@@ -34,10 +35,13 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": [ "UsersDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": [ "TaskDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": [ "HabitDynamoDBTable", "Arn" ] }
   environment:
     USERS_TABLE: ${self:custom.userTableName}
     TASK_TABLE: ${self:custom.taskTableName}
+    HABIT_TABLE: ${self:custom.habitTableName}
 
 functions:
   app:
@@ -45,14 +49,14 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
-  getUser:
-    handler: wsgi.handler
-    events:
-      - http: 'GET /users/{proxy+}'
-  createUser:
-    handler: wsgi.handler
-    events:
-      - http: 'POST /users'
+  # getUser:
+  #   handler: wsgi.handler
+  #   events:
+  #     - http: 'GET /users/{proxy+}'
+  # createUser:
+  #   handler: wsgi.handler
+  #   events:
+  #     - http: 'POST /users'
 
 resources:
   Resources:
@@ -85,43 +89,61 @@ resources:
             AttributeName: type
             AttributeType: S
           -
-            AttributeName: priority
-            AttributeType: S
-          -
-            AttributeName: parentTask
-            AttributeType: S
-          -
-            AttributeName: childTasks
-            AttributeType: S
-          -
-            AttributeName: taskName
-            AttributeType: S
-          -
-            AttributeName: taskDetails
-            AttributeType: S
-          -
-            AttributeName: completed
-            AttributeType: S
-          -
-            AttributeName: dateCreated
-            AttributeType: S
-          -
-            AttributeName: dateDue
-            AttributeType: S
-          -
-            AttributeName: dateCompleted
-            AttributeType: S
-          -
-            AttributeName: orderNumber
-            AttributeType: S
-          -
-            AttributeName: timeEstimated
+            AttributeName: dateDueISO
             AttributeType: S
         KeySchema:
           -
-            AttributeName: userId
+            AttributeName: taskId
             KeyType: HASH
+          -
+            AttributeName: dateDueISO
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: userIdIndex
+            KeySchema:
+            -
+              AttributeName: userId
+              KeyType: HASH
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: typeIndex
+            KeySchema:
+            -
+              AttributeName: type
+              KeyType: HASH
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:custom.userTableName}
+        TableName: ${self:custom.taskTableName}
+    HabitDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: habitId
+            AttributeType: S
+          -
+            AttributeName: userId
+            AttributeType: S
+          -
+            AttributeName: frequency
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: habitId
+            KeyType: HASH
+          -
+            AttributeName: userId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.habitTableName}

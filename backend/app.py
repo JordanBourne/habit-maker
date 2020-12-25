@@ -2,8 +2,10 @@ import os
 import boto3
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 USERS_TABLE = os.environ['USERS_TABLE']
 
@@ -12,6 +14,8 @@ client = boto3.client('dynamodb')
 
 @app.route("/")
 def hello():
+    print("Headers")
+    print(request.headers)
     return "Hello World!"
 
 
