@@ -1,9 +1,4 @@
-import { withAuthenticator } from '@aws-amplify/ui-react'
 import axios from 'axios';
-import { Router } from "@reach/router"
-
-import { Homepage } from './Homepage/Homepage';
-import { NewItem } from './NewItem/NewItem';
 
 axios.interceptors.request.use(config => {
   const authTokenKeyVal = Object.entries(localStorage)
@@ -18,13 +13,4 @@ axios.interceptors.request.use(config => {
   return Promise.reject(error);
 });
 
-function App() {
-  return (
-    <Router>
-      <Homepage path="/" />
-      <NewItem path="/new-item" />
-    </Router>
-  );
-}
-
-export default withAuthenticator(App)
+export const axiosWrapper = axios;

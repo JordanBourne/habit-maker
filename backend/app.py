@@ -1,14 +1,12 @@
 import os
 import boto3
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from lib import tasks
+
 
 app = Flask(__name__)
 CORS(app)
-
-USERS_TABLE = os.environ['USERS_TABLE']
-
 client = boto3.client('dynamodb')
 
 
@@ -18,13 +16,11 @@ def hello():
     print(request.headers)
     return 'Hello World!'
 
+
 @app.route('/tasks/new-task', methods=['POST'])
 def create_task():
-    task_details = request.json
-    print(task_details)
-    return jsonify({
-        'success': True
-    })
+    return tasks.create_task(request)
+
 
 @app.route('/tasks/new-habit', methods=['POST'])
 def create_habit():

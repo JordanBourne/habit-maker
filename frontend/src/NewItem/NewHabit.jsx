@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-import axios from 'axios';
+// import axios from 'axios';
+import { axiosWrapper } from '../util/axios';
 
 const useStyles = makeStyles({
   container: {
@@ -102,7 +103,7 @@ export const NewHabit = () => {
       onDaysMonthly
     };
 
-    axios.post('http://localhost:5000/tasks/new-habit', habitDetails)
+    axiosWrapper.post('http://localhost:5000/tasks/new-habit', habitDetails)
       .then(res => {
         // handle success
       })

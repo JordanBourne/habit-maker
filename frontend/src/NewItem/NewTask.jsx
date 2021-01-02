@@ -44,12 +44,14 @@ export const NewTask = () => {
   const [ description, setDescription ] = useState('');
   const [ taskDate, setTaskDate ] = useState('');
   const [ formValid, setFormValid ] = useState(false);
+  const [ submitting, setSubmitting ] = useState(false);
   
   useEffect(() => {
-    setFormValid(!!(name && description && taskDate));
-  }, [name, description, taskDate]);
+    setFormValid(!!(name && description && taskDate && !submitting));
+  }, [name, description, taskDate, submitting]);
 
   const handleSubmit = (e) => {
+    setSubmitting(true);
     const taskDetails = {
       name,
       description,
@@ -59,6 +61,10 @@ export const NewTask = () => {
     axios.post('http://localhost:5000/tasks/new-task', taskDetails)
       .then(res => {
         // handle success
+        setName('');
+        setDescription('');
+        setTaskDate('');
+        setSubmitting(false);
       })
       .catch(err => {
       })
