@@ -22,6 +22,11 @@ def create_task():
     return tasks.create_task(request)
 
 
+@app.route('/tasks/get', methods=['GET'])
+def get_tasks():
+    return tasks.get_tasks(request)
+
+
 @app.route('/tasks/new-habit', methods=['POST'])
 def create_habit():
     habit_details = request.json

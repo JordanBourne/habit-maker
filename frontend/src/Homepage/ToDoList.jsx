@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   List,
   ListItem,
@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CommentIcon from '@material-ui/icons/Comment';
 import AddIcon from '@material-ui/icons/Add';
 import { navigate } from '@reach/router';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   container: {
@@ -29,7 +30,14 @@ const useStyles = makeStyles({
 
 export const ToDoList = () => {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
+  const [ checked, setChecked ] = useState([0]);
+  const [ tasks, setTasks ] = useState([]);
+
+  useState(() => {
+    axios.get('http://localhost:5000/tasks/get').then(res => {
+    console.log(res)  
+    setTasks(res.data)});
+  }, []);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -55,19 +63,19 @@ export const ToDoList = () => {
 
   return (
     <List className={classes.container}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+      {tasks.map((task) => {
+        const labelId = `checkbox-${task.name}`;
 
         return (
-          <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
+          <ListItem key={task.taskId} role={undefined} dense button onClick={handleToggle(task.taskId)}>
             <ListItemIcon>
               <Checkbox
                 edge="start"
-                checked={checked.indexOf(value) !== -1}
+                checked={checked.indexOf(task.taskId) !== -1}
                 tabIndex={-1}
               />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItemText id={labelId} primary={task.name} />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="comments">
                 <CommentIcon />

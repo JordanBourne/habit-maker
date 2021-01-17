@@ -5,6 +5,7 @@ import datetime
 import uuid
 from flask import jsonify
 from lib.authorization import authorize_user
+from lib.util import clean_dynamo_object
 
 TASK_TABLE = os.environ['TASK_TABLE']
 
@@ -48,3 +49,33 @@ def create_task(request):
     return jsonify({
         'success': True
     })
+
+
+def get_tasks(request):
+    print('Got request for task list')
+    headers = request.headers
+
+    if not headers.get('Authentication'):
+        print('User not authenticated')
+        return jsonify({'error': 'Not authenticated'}), 400
+
+    encoded_token = headers.get('Authentication')
+    user = authorize_user(encoded_token)
+    if not user:
+        print('User was not authorized')
+        return jsonify({'error': 'Not authorized'}), 400
+    
+    print('Querying database')
+    client = boto3.client('dynamodb')
+    resp = client.query(
+        TableName=TASK_TABLE,
+        IndexName='userIdIndexAll',
+        KeyConditionExpression='userId = :userId',
+        ExpressionAttributeValues={
+            ':userId': { 'S': user }
+        }
+    )
+
+    print('Query finished, found ' + str(resp.get('Count')) + ' results')
+
+    return jsonify(clean_dynamo_object(resp)), 200

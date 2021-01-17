@@ -99,23 +99,36 @@ resources:
             AttributeName: dateDueISO
             KeyType: RANGE
         GlobalSecondaryIndexes:
-          - IndexName: userIdIndex
+          - IndexName: userIdIndexAll
             KeySchema:
             -
               AttributeName: userId
               KeyType: HASH
             Projection:
-              ProjectionType: KEYS_ONLY
+              ProjectionType: ALL
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
-          - IndexName: typeIndex
+          - IndexName: userIdDateRangeAll
+            KeySchema:
+            -
+              AttributeName: userId
+              KeyType: HASH
+            -
+              AttributeName: dateDueISO
+              KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: typeIndexAll
             KeySchema:
             -
               AttributeName: type
               KeyType: HASH
             Projection:
-              ProjectionType: KEYS_ONLY
+              ProjectionType: ALL
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
@@ -140,9 +153,27 @@ resources:
           -
             AttributeName: habitId
             KeyType: HASH
-          -
-            AttributeName: userId
-            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: userIdIndex
+            KeySchema:
+            -
+              AttributeName: userId
+              KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: frequencyIndex
+            KeySchema:
+            -
+              AttributeName: frequency
+              KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
