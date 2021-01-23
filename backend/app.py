@@ -2,7 +2,7 @@ import os
 import boto3
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from lib import tasks
+from lib import tasks, habits
 
 
 app = Flask(__name__)
@@ -29,11 +29,7 @@ def get_tasks():
 
 @app.route('/tasks/new-habit', methods=['POST'])
 def create_habit():
-    habit_details = request.json
-    print(habit_details)
-    return jsonify({
-        'success': True
-    })
+    return habits.create_habit(request)
 
 
 # @app.route('/users/<string:user_id>')
