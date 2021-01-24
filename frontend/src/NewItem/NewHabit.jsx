@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-// import axios from 'axios';
+import { navigate } from '@reach/router';
 import { axiosWrapper } from '../util/axios';
 
 const useStyles = makeStyles({
@@ -38,9 +38,15 @@ const useStyles = makeStyles({
     marginTop: '10px',
     marginBottom: '10px'
   },
+  buttonBox: {
+    width: '75%',
+    margin: 'auto',
+    display: 'flex',
+    justifyContent: 'center'
+  },
   submitButton: {
-    width: '35%',
-    margin: '10px auto'
+    width: '50%',
+    margin: '10px auto',
   },
   dateValue: {
     width: '35px',
@@ -110,6 +116,10 @@ export const NewHabit = () => {
       .catch(err => {
         console.log('Error: ', err);
       })
+  };
+
+  const goBack = () => {
+    navigate('/');
   };
 
   const updateFrequency = (e, newFrequency) => setFrequency(newFrequency);
@@ -309,7 +319,8 @@ export const NewHabit = () => {
         {frequency === 'daily' && <div className={classes.description}>You will be reminded to do this task every day.</div>}
         {frequency === 'weekly' && weeklyExtraOptions()}
         {frequency === 'monthly' && monthlyExtraOptions()}
-        <Button className={[classes.inputBox, classes.submitButton].join(' ')} variant="outlined" onClick={handleSubmit} disabled={!formValid}>Create</Button>
+        <div className={classes.buttonBox}><Button className={[classes.submitButton].join(' ')} variant="outlined" onClick={handleSubmit} disabled={!formValid}>Create</Button></div>
+        <div className={classes.buttonBox}><Button className={[classes.submitButton].join(' ')} variant="outlined" onClick={goBack}>Back</Button></div>
       </div>
     </div>
   )

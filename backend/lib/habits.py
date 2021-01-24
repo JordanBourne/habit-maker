@@ -79,7 +79,7 @@ def get_habits(request):
     client = boto3.client('dynamodb')
     resp = client.query(
         TableName=HABIT_TABLE,
-        IndexName='userIdIndexAll',
+        IndexName='userIdIndex',
         KeyConditionExpression='userId = :userId',
         ExpressionAttributeValues={
             ':userId': { 'S': user }

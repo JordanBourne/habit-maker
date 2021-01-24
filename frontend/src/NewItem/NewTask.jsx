@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField } from '@material-ui/core';
-import axios from 'axios';
+import { navigate } from '@reach/router';
+import { axiosWrapper } from '../util/axios';
 
 const useStyles = makeStyles({
   container: {
@@ -32,8 +33,14 @@ const useStyles = makeStyles({
     marginTop: '10px',
     marginBottom: '10px'
   },
+  buttonBox: {
+    width: '75%',
+    margin: 'auto',
+    display: 'flex',
+    justifyContent: 'center'
+  },
   submitButton: {
-    width: '35%',
+    width: '50%',
     margin: '10px auto'
   }
 })
@@ -58,7 +65,7 @@ export const NewTask = () => {
       taskDate
     };
 
-    axios.post('http://localhost:5000/tasks/new-task', taskDetails)
+    axiosWrapper.post('http://localhost:5000/tasks/new-task', taskDetails)
       .then(res => {
         // handle success
         setName('');
@@ -68,6 +75,10 @@ export const NewTask = () => {
       })
       .catch(err => {
       })
+  };
+
+  const goBack = () => {
+    navigate('/');
   };
 
   return (
@@ -107,7 +118,8 @@ export const NewTask = () => {
             shrink: true,
           }}
         />
-        <Button className={[classes.inputBox, classes.submitButton].join(' ')} variant="outlined" onClick={handleSubmit} disabled={!formValid}>Create</Button>
+        <div className={classes.buttonBox}><Button className={[classes.submitButton].join(' ')} variant="outlined" onClick={handleSubmit} disabled={!formValid}>Create</Button></div>
+        <div className={classes.buttonBox}><Button className={[classes.submitButton].join(' ')} variant="outlined" onClick={goBack}>Back</Button></div>
       </div>
     </div>
   )

@@ -4,6 +4,7 @@ import { Router } from "@reach/router"
 
 import { Homepage } from './Homepage/Homepage';
 import { NewItem } from './NewItem/NewItem';
+import { Habits } from './Habits/Habits';
 
 axios.interceptors.request.use(config => {
   const authTokenKeyVal = Object.entries(localStorage)
@@ -23,6 +24,7 @@ function App() {
     <Router>
       <Homepage path="/" />
       <NewItem path="/new-item" />
+      <Habits path="/habits" />
     </Router>
   );
 }

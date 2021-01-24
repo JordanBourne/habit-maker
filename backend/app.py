@@ -32,6 +32,11 @@ def create_habit():
     return habits.create_habit(request)
 
 
+@app.route('/habits/get', methods=['GET'])
+def get_habits():
+    return habits.get_habits(request)
+
+
 # @app.route('/users/<string:user_id>')
 # def get_user(user_id):
 #     resp = client.get_item(

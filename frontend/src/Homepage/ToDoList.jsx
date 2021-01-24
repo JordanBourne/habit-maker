@@ -7,7 +7,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton
-} from '@material-ui/core'
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CommentIcon from '@material-ui/icons/Comment';
 import AddIcon from '@material-ui/icons/Add';
@@ -25,6 +25,13 @@ const useStyles = makeStyles({
   },
   addItemIcon: {
     paddingTop: '2px'
+  },
+  subHeader: {
+    color: 'rgba(0,0,0,.6)',
+    textAlign: 'center',
+    marginTop: '5px',
+    fontSize: '1.2em',
+    flexBasis: '100%'
   }
 });
 
@@ -32,6 +39,10 @@ export const ToDoList = () => {
   const classes = useStyles();
   const [ checked, setChecked ] = useState([0]);
   const [ tasks, setTasks ] = useState([]);
+
+  // Move these to state
+  const numCompleted = 0;
+  const numToDo = 5;
 
   useState(() => {
     axios.get('http://localhost:5000/tasks/get').then(res => {
@@ -62,39 +73,42 @@ export const ToDoList = () => {
   };
 
   return (
-    <List className={classes.container}>
-      {tasks.map((task) => {
-        const labelId = `checkbox-${task.name}`;
+    <>
+      <h2 className={classes.subHeader}>{numCompleted} / {numToDo}</h2>
+      <List className={classes.container}>
+        {tasks.map((task) => {
+          const labelId = `checkbox-${task.name}`;
 
-        return (
-          <ListItem key={task.taskId} role={undefined} dense button onClick={handleToggle(task.taskId)}>
-            <ListItemIcon>
-              <Checkbox
+          return (
+            <ListItem key={task.taskId} role={undefined} dense button onClick={() => handleToggle(task.taskId)}>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={checked.indexOf(task.taskId) !== -1}
+                  tabIndex={-1}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={task.name} />
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="comments">
+                  <CommentIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+        <ListItem key={'Add New'} role={undefined} dense button onClick={goToAddNewItem}>
+          <div className={classes.addItem}>
+            <ListItemIcon className={classes.addItemIcon}>
+              <AddIcon
                 edge="start"
-                checked={checked.indexOf(task.taskId) !== -1}
                 tabIndex={-1}
               />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={task.name} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-      <ListItem key={'Add New'} role={undefined} dense button onClick={goToAddNewItem}>
-        <div className={classes.addItem}>
-          <ListItemIcon className={classes.addItemIcon}>
-            <AddIcon
-              edge="start"
-              tabIndex={-1}
-            />
-          </ListItemIcon>
-          <ListItemText> Add New Item </ListItemText>
-        </div>
-      </ListItem>
-    </List>
+            <ListItemText> Add New Item </ListItemText>
+          </div>
+        </ListItem>
+      </List>
+    </>
   )
 }
